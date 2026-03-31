@@ -1,0 +1,181 @@
+<main class="shell">
+    <div class="topbar">
+        <a routerLink="/" class="back-link">← Volver al inicio</a>
+    </div>
+
+    <header class="header">
+        <h1>OCR TPV - Necomplus</h1>
+        <p>Procesado de pareja de imágenes: comercio + detalle</p>
+    </header>
+
+    <section class="card">
+        <h2>1. Captura de comercio</h2>
+
+        <input id="comercioInput" type="file" accept="image/png,image/jpeg,image/webp"
+            (change)="onComercioFileChange($event)" />
+
+        <div class="actions">
+            <button (click)="uploadComercio()" [disabled]="uploadingComercio || !selectedComercioFile">
+                {{ uploadingComercio ? ('Subiendo... ' + (uploadProgressComercio ?? 0) + '%') : 'Subir captura comercio'
+                }}
+            </button>
+        </div>
+
+        <div *ngIf="uploadProgressComercio !== null" class="progress-wrap">
+            <div class="progress-bar" [style.width.%]="uploadProgressComercio"></div>
+        </div>
+        <div *ngIf="uploadProgressComercio !== null" class="progress-text">
+            {{ uploadProgressComercio }}%
+        </div>
+
+        <div *ngIf="uploadedComercio" class="info-box">
+            <div><strong>Archivo:</strong> {{ uploadedComercio.original_name }}</div>
+            <div><strong>ID subida:</strong> {{ uploadedComercio.id }}</div>
+            <div><a [href]="uploadedComercio.url" target="_blank" rel="noopener noreferrer">Ver imagen</a></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>2. Captura de detalle</h2>
+
+        <input id="detalleInput" type="file" accept="image/png,image/jpeg,image/webp"
+            (change)="onDetalleFileChange($event)" />
+
+        <div class="actions">
+            <button (click)="uploadDetalle()" [disabled]="uploadingDetalle || !selectedDetalleFile">
+                {{ uploadingDetalle ? ('Subiendo... ' + (uploadProgressDetalle ?? 0) + '%') : 'Subir captura detalle' }}
+            </button>
+        </div>
+
+        <div *ngIf="uploadProgressDetalle !== null" class="progress-wrap">
+            <div class="progress-bar" [style.width.%]="uploadProgressDetalle"></div>
+        </div>
+        <div *ngIf="uploadProgressDetalle !== null" class="progress-text">
+            {{ uploadProgressDetalle }}%
+        </div>
+
+        <div *ngIf="uploadedDetalle" class="info-box">
+            <div><strong>Archivo:</strong> {{ uploadedDetalle.original_name }}</div>
+            <div><strong>ID subida:</strong> {{ uploadedDetalle.id }}</div>
+            <div><a [href]="uploadedDetalle.url" target="_blank" rel="noopener noreferrer">Ver imagen</a></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>3. Procesar pareja</h2>
+
+        <div class="actions">
+            <button (click)="processPair()"
+                [disabled]="processingPair || uploadingComercio || uploadingDetalle || !uploadedComercio || !uploadedDetalle">
+                {{ processingPair ? 'Procesando OCR...' : 'Procesar pareja Necomplus' }}
+            </button>
+
+            <button class="secondary" (click)="loadComercios()" [disabled]="loadingComercios">
+                {{ loadingComercios ? 'Recargando...' : 'Recargar comercios' }}
+            </button>
+        </div>
+
+        <p *ngIf="processingPair" class="processing-note">
+            El primer procesamiento puede tardar bastante porque se cargan modelos OCR.
+        </p>
+
+        <p *ngIf="statusMessage" class="ok">{{ statusMessage }}</p>
+        <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+    </section>
+
+    <section class="card" *ngIf="processResult">
+        <h2>Resultado extraído</h2>
+
+        <div class="grid-detail">
+            <div><strong>Descripción:</strong> {{ processResult.comercio_data.descripcion || 'Vacío' }}</div>
+            <div><strong>Código comercio:</strong> {{ processResult.comercio_data.codigo_comercio || 'Vacío' }}</div>
+            <div><strong>Dirección:</strong> {{ processResult.comercio_data.direccion || 'Vacío' }}</div>
+            <div><strong>Localidad:</strong> {{ processResult.comercio_data.localidad || 'Vacío' }}</div>
+            <div><strong>Provincia:</strong> {{ processResult.comercio_data.provincia || 'Vacío' }}</div>
+            <div><strong>Código postal:</strong> {{ processResult.comercio_data.cod_postal || 'Vacío' }}</div>
+            <div><strong>Teléfono 1:</strong> {{ processResult.comercio_data.telefono_1 || 'Vacío' }}</div>
+            <div><strong>Teléfono 2:</strong> {{ processResult.comercio_data.telefono_2 || 'Vacío' }}</div>
+            <div><strong>Horario:</strong> {{ processResult.comercio_data.horario || 'Vacío' }}</div>
+            <div><strong>Contacto:</strong> {{ processResult.comercio_data.contacto || 'Vacío' }}</div>
+            <div><strong>Interv:</strong> {{ processResult.detalle_data.interv || 'Vacío' }}</div>
+            <div><strong>N/S Ret/Afec:</strong> {{ processResult.detalle_data.ns_ret_afec || 'Vacío' }}</div>
+        </div>
+
+        <div class="question-box" *ngIf="selectedComercioId">
+            <p><strong>¿Quieres introducir campos faltantes?</strong></p>
+
+            <div class="actions">
+                <button (click)="setManualChoice(true)">Sí</button>
+                <button class="secondary" (click)="setManualChoice(false)">No</button>
+            </div>
+        </div>
+
+        <app-manual-commerce-form *ngIf="manualChoice === true" [title]="'Campos manuales opcionales'"
+            [submitText]="'Guardar campos manuales'" [savingText]="'Guardando...'" [saving]="savingManual"
+            [showTerminalField]="true" [initialData]="manualInitialData"
+            (save)="saveManualFields($event)"></app-manual-commerce-form>
+    </section>
+
+    <section class="card">
+        <h2>Comercios Necomplus</h2>
+
+        <div *ngIf="loadingComercios">Cargando comercios...</div>
+
+        <div *ngIf="!loadingComercios && !comercios.length">
+            Todavía no hay comercios procesados.
+        </div>
+
+        <ul *ngIf="comercios.length" class="upload-list">
+            <li *ngFor="let comercio of comercios">
+                <div class="row top-row">
+                    <div class="left-grow">
+                        <strong>{{ comercio.descripcion || 'Sin descripción' }}</strong>
+                        <div class="meta">Código comercio: {{ comercio.codigo_comercio }}</div>
+                        <div class="meta">Dirección: {{ comercio.direccion || 'Vacío' }}</div>
+                        <div class="meta">Última interv: {{ comercio.ultima_interv || 'Vacío' }}</div>
+                        <div class="meta">Terminal actual: {{ comercio.ns_inst_actual || 'Vacío' }}</div>
+                        <div class="meta">Último N/S Ret/Afec: {{ comercio.ultimo_ns_ret_afec || 'Vacío' }}</div>
+                    </div>
+
+                    <div class="actions-mini">
+                        <button class="secondary" (click)="loadComercioDetail(comercio.id)">
+                            Ver comercio
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <section class="card" *ngIf="selectedComercio">
+        <h2>Ficha del comercio</h2>
+
+        <div class="grid-detail">
+            <div><strong>Descripción:</strong> {{ selectedComercio.descripcion || 'Vacío' }}</div>
+            <div><strong>Código comercio:</strong> {{ selectedComercio.codigo_comercio }}</div>
+            <div><strong>Dirección:</strong> {{ selectedComercio.direccion || 'Vacío' }}</div>
+            <div><strong>Localidad:</strong> {{ selectedComercio.localidad || 'Vacío' }}</div>
+            <div><strong>Provincia:</strong> {{ selectedComercio.provincia || 'Vacío' }}</div>
+            <div><strong>Código postal:</strong> {{ selectedComercio.cod_postal || 'Vacío' }}</div>
+            <div><strong>Teléfono 1:</strong> {{ selectedComercio.telefono_1 || 'Vacío' }}</div>
+            <div><strong>Teléfono 2:</strong> {{ selectedComercio.telefono_2 || 'Vacío' }}</div>
+            <div><strong>Horario:</strong> {{ selectedComercio.horario || 'Vacío' }}</div>
+            <div><strong>Contacto OCR:</strong> {{ selectedComercio.contacto || 'Vacío' }}</div>
+            <div><strong>Última interv:</strong> {{ selectedComercio.ultima_interv || 'Vacío' }}</div>
+            <div><strong>Último N/S Ret/Afec:</strong> {{ selectedComercio.ultimo_ns_ret_afec || 'Vacío' }}</div>
+            <div><strong>Terminal actual:</strong> {{ selectedComercio.ns_inst_actual || 'Vacío' }}</div>
+            <div><strong>Sector:</strong> {{ selectedComercio.sector || 'Vacío' }}</div>
+            <div><strong>Tipo:</strong> {{ selectedComercio.tipo || 'Vacío' }}</div>
+            <div><strong>Comentario:</strong> {{ selectedComercio.comentario || 'Vacío' }}</div>
+            <div><strong>Actuación:</strong> {{ selectedComercio.actuacion }}</div>
+        </div>
+
+        <h3>Contactos manuales</h3>
+        <div *ngIf="!selectedComercio.contactos_manuales.length">No hay contactos manuales todavía.</div>
+        <ul *ngIf="selectedComercio.contactos_manuales.length">
+            <li *ngFor="let c of selectedComercio.contactos_manuales">
+                {{ c.orden }}. {{ c.nombre }}
+            </li>
+        </ul>
+    </section>
+</main>

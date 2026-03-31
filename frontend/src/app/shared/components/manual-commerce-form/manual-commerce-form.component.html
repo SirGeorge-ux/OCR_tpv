@@ -1,0 +1,63 @@
+<form class="manual-form" (ngSubmit)="submitForm()">
+    <h3>{{ title }}</h3>
+
+    <div class="grid-detail">
+        <label *ngIf="showTerminalField">
+            <strong>Terminal nuevo instalado</strong>
+            <input type="text" [(ngModel)]="form.ns_inst_manual" name="ns_inst_manual" />
+        </label>
+
+        <label>
+            <strong>Sector</strong>
+            <input type="text" [(ngModel)]="form.sector" name="sector" />
+        </label>
+
+        <label>
+            <strong>Tipo</strong>
+            <input type="text" [(ngModel)]="form.tipo" name="tipo" />
+        </label>
+
+        <label>
+            <strong>Actuación</strong>
+            <input type="number" [(ngModel)]="form.actuacion" name="actuacion" />
+        </label>
+
+        <label>
+            <strong>Latitud</strong>
+            <input type="number" step="any" [(ngModel)]="form.coordenada_lat" name="coordenada_lat" />
+        </label>
+
+        <label>
+            <strong>Longitud</strong>
+            <input type="number" step="any" [(ngModel)]="form.coordenada_lng" name="coordenada_lng" />
+        </label>
+    </div>
+
+    <label class="full-width">
+        <strong>Comentario</strong>
+        <textarea [(ngModel)]="form.comentario" name="comentario" rows="4"></textarea>
+    </label>
+
+    <label>
+        <strong>Número de personas de contacto</strong>
+        <select [(ngModel)]="contactsCount" name="contactsCount" (change)="syncContacts()">
+            <option [ngValue]="0">0</option>
+            <option [ngValue]="1">1</option>
+            <option [ngValue]="2">2</option>
+            <option [ngValue]="3">3</option>
+        </select>
+    </label>
+
+    <div class="grid-detail" *ngIf="contacts.length">
+        <label *ngFor="let contact of contacts; let i = index; trackBy: trackByIndex">
+            <strong>Contacto {{ i + 1 }}</strong>
+            <input type="text" [(ngModel)]="contact.nombre" [name]="'manualContact' + i" />
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="submit" [disabled]="saving">
+            {{ saving ? savingText : submitText }}
+        </button>
+    </div>
+</form>

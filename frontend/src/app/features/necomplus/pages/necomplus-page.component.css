@@ -1,0 +1,186 @@
+.shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.topbar {
+    margin-bottom: 16px;
+}
+
+.back-link {
+    text-decoration: none;
+    font-weight: 600;
+    color: #374151;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+}
+
+.actions-mini {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #111827;
+    color: white;
+}
+
+.secondary {
+    background: #374151;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ok {
+    color: #166534;
+    font-weight: 600;
+}
+
+.error {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.processing-note {
+    color: #374151;
+    background: #f3f4f6;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.info-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f3f4f6;
+    border-radius: 10px;
+    display: grid;
+    gap: 6px;
+}
+
+.question-box {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    background: #eff6ff;
+}
+
+.manual-form {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    background: #f9fafb;
+    display: grid;
+    gap: 16px;
+}
+
+.manual-form input,
+.manual-form textarea,
+.manual-form select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.full-width {
+    display: block;
+}
+
+.upload-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.upload-list li {
+    border-top: 1px solid #eee;
+    padding: 14px 0;
+}
+
+.upload-list li:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+}
+
+.top-row {
+    align-items: flex-start;
+}
+
+.left-grow {
+    flex: 1;
+    min-width: 0;
+}
+
+.meta {
+    color: #666;
+    font-size: 14px;
+    margin-top: 4px;
+    word-break: break-word;
+}
+
+.grid-detail {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-bottom: 16px;
+}
+
+.progress-wrap {
+    width: 100%;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #2563eb;
+    transition: width 0.2s ease;
+}
+
+.progress-text {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 600;
+}

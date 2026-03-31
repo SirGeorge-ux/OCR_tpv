@@ -1,0 +1,51 @@
+.manual-form {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    background: #f9fafb;
+    display: grid;
+    gap: 16px;
+}
+
+.manual-form input,
+.manual-form textarea,
+.manual-form select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.grid-detail {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-bottom: 16px;
+}
+
+.full-width {
+    display: block;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0 0;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #111827;
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

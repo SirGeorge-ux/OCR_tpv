@@ -1,19 +1,27 @@
-FROM python:3.12-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
     libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgomp1 \
     libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir paddlepaddle==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/ \
-    && pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip && \
+    python -m pip install paddlepaddle==3.0.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/ && \
+    python -m pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 
